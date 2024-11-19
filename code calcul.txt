@@ -1,0 +1,79 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+float n;
+float u;
+float s;
+char o;
+void setup()
+{
+lcd.begin(16,2);
+lcd.init();
+lcd.backlight();
+}
+
+void loop()
+{
+ n();
+ u();
+ o();
+ s();
+ printf("le resultat est: %f",s()); 
+ 
+}
+
+void n()
+{
+ float Charc;
+  int buff = Serial.available();
+  Serial.print("Entrer n:");
+  if(buff>0)
+  {
+    Charc = Serial.read();
+    n = Charc;
+  }
+}
+
+void u()
+{
+ float Charc;
+  int buff = Serial.available();
+  Serial.print("Entrer u:");
+  if(buff>0)
+  {
+    Charc = Serial.read();
+    u = Charc;
+  }
+}
+
+void o()
+{
+ float Charc;
+  int buff = Serial.available();
+  Serial.print("Entrer o(+*-/):");
+  if(buff>0)
+  {
+    Charc = Serial.read();
+    o = Charc;
+  }
+}
+
+void s()
+{
+ if(o == '+')
+ {
+   s=u+n;
+ }
+  if(o == '-')
+ {
+   s=u-n;
+ }
+  if(o == '*')
+ {
+   s=u*n;
+ }
+  if(o == '/')
+ {
+   s=u/n;
+ }
+}
