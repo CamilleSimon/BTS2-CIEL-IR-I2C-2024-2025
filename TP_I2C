@@ -1,0 +1,97 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+// Création d'un objet LCD avec l'adresse I2C de l'écran
+LiquidCrystal_I2C lcd(0x20, 16, 2);
+
+void setup()
+{
+  lcd.begin(16,2);
+  lcd.init();
+  lcd.backlight();
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  float x1, x2, result;
+  char operation;
+  
+  lcd.setCursor(0, 0);
+  lcd.print("1er nombre : ");
+  Serial.println("Entrez 1er nombre:");
+  while (Serial.available() == 0);
+  x1 = Serial.parseFloat(); // Lecture du nombre
+  lcd.setCursor(0, 1);
+  lcd.print(x1);
+  Serial.println(x1);
+  delay(1000);
+  
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Op: +,-,*,/");
+  Serial.println("Entrez une operation (+, -, *, /) :");
+  while (Serial.available() == 0); 
+  operation = Serial.read(); // Lecture de l'opération
+  Serial.println(operation);
+  delay(1000);
+  
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("2eme nombre : ");
+  Serial.println("Entrez 2eme nombre:");
+  while (Serial.available() == 0);
+  x2 = Serial.parseFloat(); // Lecture du nombre
+  lcd.setCursor(0, 1);
+  lcd.print(x2);
+  Serial.println(x2);
+  delay(1000);
+  
+  lcd.clear();
+    switch (operation) {
+    case '+':
+      result = x1 + x2;
+      break;
+    case '-':
+      result = x1 - x2;
+      break;
+    case '*':
+      result = x1 * x2;
+      break;
+    case '/':
+      if (x2 != 0) {
+        result = x1 / x2;
+      } else {
+        lcd.clear();
+        lcd.print("Erreur: Div 0");
+        Serial.println("Erreur: Division par zéro");
+        delay(2000);
+        return; // Arrête le traitement si division par zéro
+      }
+      break;
+    default:
+      lcd.clear();
+      lcd.print("Erreur: Op inval");
+      Serial.println("Erreur: Opération invalide");
+      delay(2000);
+      return; // Arrête le traitement si opération invalide
+  }
+
+  // Afficher le résultat
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Res:");
+  lcd.setCursor(5, 0);
+  lcd.print(result);
+  Serial.print("Resultat : ");
+  Serial.println(result);
+
+  delay(10000); // Laisser le résultat affiché 5 secondes avant de recommencer
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("taper sur clavier");
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("pour une nouvelle operation");
+  while (Serial.available() == 0){}
+  Serial.readString();
+}
