@@ -1,0 +1,66 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// Création d'un objet LCD avec l'adresse I2C de l'écran
+LiquidCrystal_I2C lcd(0x20, 16, 2);
+
+
+void setup()
+{
+  lcd.begin(16,2);
+  lcd.init();
+  lcd.backlight();
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  float val1 = 0; // valeur numero 1 
+  float val2 = 0; // valeur numero 2 
+  int opperation = 0; // valeur de l'operation 
+  
+  
+  int buff= serial.available(); // 
+  
+ while(buff > 0) // tant qu'il reste des caractères dans le buffer
+    {
+        val1 = Serial.read(); // lecture du caractère
+   		buff = Serial.available(); // mise à jour du nombre de caratères restant
+        val2 = Serial.read();
+   		buff = Serial.available(); // mise à jour du nombre de caratères restant
+   		opperation = Serial.read();
+   
+   if (opperation = "+")
+   {
+   float resultat1 = val1 + val2 ;
+   lcd.print(resultat1);
+   }
+   else if (opperation = "-")
+   {
+   float resultat2 = val1 - val2 ;
+   lcd.print(resultat2);
+   }
+   else if (opperation = "*")
+   {
+   float resultat3 = val1 * val2 ;
+   lcd.print(resultat3);
+   }
+   else (opperation = "/")
+   {
+   float resultat4 = val1 / val2 ;
+   lcd.print(resultat4);
+   }
+   
+    lcd.setCursor(0, 0);//la ou sera afficher le texte
+  lcd.print("Resultat: ");//texte à afficher
+  lcd.setCursor(0, 1);//la ou sera afficher le texte
+  lcd.print(result);// affiche le resultat
+  delay(5000);// laisse le temps pour regarder le resultat
+  lcd.clear();
+  
+
+   
+        buff = Serial.available(); // mise à jour du nombre de caratères restant
+    }
+  
+}
