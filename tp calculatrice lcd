@@ -1,0 +1,91 @@
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(32, 16, 2);
+int t = 3000;
+// calculator variables
+float prmNum;
+float deuxNum;
+float total;
+String operation;
+
+
+void setup()
+{
+	lcd.begin(16, 2);
+	lcd.init();
+	lcd.backlight();
+	Serial.begin(9600);
+}
+
+void loop()
+{
+	
+	lcd.setCursor(0, 0);
+	lcd.print("1er nombre");
+	while (Serial.available() == 0)
+	{
+
+	}
+	prmNum = Serial.parseFloat();
+	lcd.clear();
+
+	
+	lcd.setCursor(0, 0);
+	lcd.print("choix operation");
+	lcd.setCursor(0, 1);
+	lcd.print("+,-,*,/");
+	while (Serial.available() == 0)
+	{
+
+	}
+	operation = Serial.readString();
+	lcd.clear();
+
+
+
+
+
+	lcd.setCursor(0, 0);
+	lcd.print("2eme nombre");
+	while (Serial.available() == 0)
+	{
+
+	}
+	deuxNum = Serial.parseFloat();
+	lcd.clear();
+
+	
+	
+	if (operation == "+")
+	{
+		total = prmNum + deuxNum;
+	}
+	if (operation == "-")
+	{
+		total = prmNum - deuxNum;
+	}
+
+	if (operation == "*")
+	{
+		total = prmNum * deuxNum;
+	}
+
+	if (operation == "/")
+	{
+		total = prmNum / deuxNum;
+	}
+	lcd.setCursor(0, 0);
+	lcd.print(prmNum);
+	lcd.print(operation);
+	lcd.print(deuxNum);
+	lcd.print("=");
+	lcd.print(total);
+	delay(3000);
+	lcd.clear();
+	lcd.setCursor(0, 0);
+	lcd.print("tape sur clavier");
+	lcd.setCursor(0, 1);
+	lcd.print("pour recommencer");
+	while (Serial.available() == 0);
+	Serial.readString();
+	lcd.clear();
+}
