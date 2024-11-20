@@ -1,0 +1,66 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// Création d'un objet LCD avec l'adresse I2C de l'écran
+LiquidCrystal_I2C lcd(0x20, 16, 2);
+
+// Déclaration des variables
+float unnbr;
+float denbr;
+float result;
+String operateur;
+
+void setup() {
+  lcd.begin(16, 2);
+  lcd.init();
+  lcd.backlight();
+  Serial.begin(9600); 
+}
+
+void loop() {
+  lcd.setCursor(2, 0);//la ou sera afficher le texte
+  lcd.print("1er nbr : ");//texte à afficher
+  unnbr = Serial.parseFloat(); // Lire le premier nombre
+  lcd.clear();//enleve le texte afficher
+
+  lcd.setCursor(2, 0);//la ou sera afficher le texte
+  lcd.print("2eme nbr:");//texte à afficher
+  denbr = Serial.parseFloat(); // Lire le deuxième nombre
+  lcd.clear();//enleve le texte afficher
+
+  lcd.setCursor(0, 0);//la ou sera afficher le texte
+  lcd.print("Choisir operateur");//texte à afficher
+  lcd.setCursor(0, 1);//la ou sera afficher le texte
+  lcd.print("+,-,*,/");//texte à afficher
+  operateur = Serial.readString(); // Lire l'opérateur
+  lcd.clear();//enleve le texte afficher
+  
+//fait les operations demander
+  if (operateur == "+") {
+    result = unnbr + denbr;
+  } else if (operateur == "-") {
+    result = unnbr - denbr;
+  } else if (operateur == "*") {
+    result = unnbr * denbr;
+  } else if (operateur == "/") {
+    if (denbr == 0) {// verifie si le diviseur est 0
+      lcd.print("Erreur : division par 0");
+    }
+    result = unnbr / denbr;
+  } else { //verifie si l'utilisateur rentre le bon operateur
+    lcd.print("Operateur invalide");
+    delay(2000);// laisse le temps pour regarder
+    lcd.clear();//enleve le texte afficher
+    return;
+  }
+
+  lcd.setCursor(0, 0);//la ou sera afficher le texte
+  lcd.print("Resultat: ");//texte à afficher
+  lcd.setCursor(0, 1);//la ou sera afficher le texte
+  lcd.print(result);// affiche le resultat
+  delay(5000);// laisse le temps pour regarder le resultat
+  lcd.clear();
+}
+
+
+
