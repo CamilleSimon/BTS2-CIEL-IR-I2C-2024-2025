@@ -1,0 +1,77 @@
+#include <LiquidCrystal_I2C.h>
+
+// Création d'un objet LCD avec l'adresse I2C de l'écran
+LiquidCrystal_I2C lcd(0x27, 16, 2); // adresse I2C , avec écran 16 colonnes * 2 lignes
+
+void setup() {
+  // Initialisation de l'écran LCD
+  lcd.init();
+  lcd.backlight();
+  Serial.begin(9600);
+}
+
+void loop() {
+  float nb1, nb2, result;
+  char signe, reponse;
+
+  // Saisie du premier nombre
+  lcd.setCursor(0, 0);
+  lcd.print("Premier nombre: ");
+  while (Serial.available() == 0);
+  nb1 = Serial.parseFloat(); // Lit le nombre
+  Serial.read();             // Vide le tampon série
+  lcd.setCursor(0, 1);
+  lcd.print(nb1);
+
+  delay(100); // Pause pour afficher l'entrée
+  lcd.clear();
+
+  
+  lcd.setCursor(0, 0);
+  lcd.print("Deuxieme nombre: ");
+  while (Serial.available() == 0);
+  nb2 = Serial.parseFloat(); // Lit le nombre
+  Serial.read();             // Vide le tampon série
+  lcd.setCursor(0, 1);
+  lcd.print(nb2);
+  
+  delay(100); // Pause pour afficher l'entrée
+  lcd.clear();
+
+    lcd.setCursor(0, 0);
+  lcd.print("give the sign: ");
+  while (Serial.available() == 0);
+  signe = Serial.read(); // Lit le nombre
+  Serial.read();             // Vide le tampon série
+  lcd.setCursor(0, 1);
+  lcd.print(signe);
+  
+  delay(100); // Pause pour afficher l'entrée
+  lcd.clear();
+
+if (signe == '+') {
+  result = nb1 + nb2;
+  } // Exemple d'addition
+if (signe == '-') {
+  result = nb1 - nb2;
+}
+if (signe == '*') {
+  result = nb1 * nb2;
+}
+if (signe == '/'){
+  result = nb1 / nb2;
+}
+  lcd.setCursor(0, 0);
+  lcd.print("Resultat: ");
+  lcd.setCursor(0, 1);
+  lcd.print(result);
+  
+
+  delay(1000); // Pause pour afficher le résultat
+  lcd.clear();
+
+   lcd.setCursor(0, 0);
+  lcd.print("new operation?");
+  while (Serial.available() == 0);
+   
+}
