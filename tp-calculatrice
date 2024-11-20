@@ -1,0 +1,76 @@
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x20, 16, 2);
+
+void setup()
+{
+    lcd.begin(16, 2);
+    lcd.init();
+    lcd.backlight();
+    Serial.begin(9600);
+}
+
+void loop()
+{
+
+    float nb1, nb2, resultat;
+    char operateur;
+
+    lcd.setCursor(0, 0);
+    lcd.print("1er nombre:");
+    while (Serial.available() == 0);
+    nb1 = Serial.parseFloat();
+    lcd.setCursor(0, 1);
+    lcd.print(nb1);
+    delay(2000);
+
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("2eme nombre:");
+    while (Serial.available() == 0);
+    nb2 = Serial.parseFloat();
+    lcd.setCursor(0, 1);
+    lcd.print(nb2);
+    delay(2000);
+
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("operateur:");
+    while (Serial.available() == 0);
+    operateur = Serial.read();
+    lcd.setCursor(0, 1);
+    lcd.print(operateur);
+    delay(2000);
+    lcd.clear();
+
+    if (operateur == '+')
+    {
+        resultat = nb1 + nb2;
+        lcd.print(resultat);
+    }
+    else if(operateur == '-')
+    {
+        resultat = nb1 - nb2;
+        lcd.print(resultat);
+    }
+    else if (operateur == '*')
+    {
+        resultat = nb1 * nb2;
+        lcd.print(resultat);
+    }
+    else if (operateur == '/')
+    {
+      	if(nb2 ==0)
+        {
+        	lcd.print("Division par 0 impossible");
+            lcd.scrollDisplayLeft();
+            delay(5000);
+        }
+      else
+      {
+      	resultat = nb1 / nb2;
+        lcd.print(resultat);
+      }
+    }
+    delay(5000);
+}
