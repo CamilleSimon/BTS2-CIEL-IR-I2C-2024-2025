@@ -1,0 +1,139 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+
+// Création d'un objet LCD avec l'adresse I2C de l'écran
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+
+
+void setup()
+{
+  Serial.begin(9600);
+  lcd.begin(16,2);
+  lcd.init();
+  lcd.backlight();
+}
+
+void loop()
+{
+  String nbr1 = "";
+  String nbr2 = "";
+  String conti = "";
+  String signe = "";
+  String ch = "";
+  
+  lcd.setCursor(0, 0);
+  lcd.print("Entrez le ");
+  lcd.setCursor(0, 1);
+  lcd.print("premier nombre :");
+  
+  while(nbr1 == ""){
+    while (Serial.available() > 0) {
+      char receivedChar = Serial.read();
+      nbr1 += receivedChar;
+      delay(100);
+    }
+   
+  }
+  
+  
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Entrez le ");
+  lcd.setCursor(0, 1);
+  lcd.print("deuxieme nombre :");
+  
+  while(nbr2 == ""){
+    while (Serial.available() > 0) {
+      char receivedChar = Serial.read();
+      nbr2 += receivedChar;
+      delay(100);
+    }
+   
+  }
+  
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Entrez le ");
+  lcd.setCursor(0, 1);
+  lcd.print("signe :");  
+  
+
+  while(signe == ""){
+    while (Serial.available() > 0) {
+      char receivedChar = Serial.read();
+      signe += receivedChar;
+      delay(100);
+    }
+  }
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Signe choisit : ");
+  lcd.setCursor(0, 1);
+  lcd.print(signe);
+  delay(1000);
+  
+  float fnbr1 = nbr1.toFloat();
+  float fnbr2 = nbr2.toFloat();
+  float resultat = 0;
+  
+  if(signe == "+"){
+    resultat = fnbr1 + fnbr2;
+  }else if(signe == "-"){
+    resultat = fnbr1 - fnbr2;
+  
+  
+  }else if(signe == "*"){
+    resultat = fnbr1 * fnbr2;
+  
+  
+  }else if(signe == "/"){
+    if (fnbr2 != 0){
+      resultat = fnbr1 / fnbr2;}
+    else{
+      lcd.clear();
+  	  lcd.setCursor(0, 0);
+  	  lcd.print("ERREUR!");
+  	  lcd.setCursor(0, 1);
+  	  lcd.print("DIVISION PAR 0");
+  	  delay(1500);
+      resultat = fnbr1 / fnbr2;
+    }
+  }
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Resultat : ");
+  lcd.setCursor(0, 1);
+  lcd.print(resultat);
+  delay(1500);
+  
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Continuer?");
+  lcd.setCursor(0, 1);
+  lcd.print("y/n");
+  
+  while(conti == ""){
+    while (Serial.available() > 0) {
+      char receivedChar = Serial.read();
+      conti += receivedChar;
+      delay(100);
+    }  
+  }
+  
+  if(conti == "n"){
+      lcd.clear();
+  	lcd.setCursor(0, 0);
+  	lcd.print("EXIT!");
+  	delay(1500);
+    
+    lcd.noBacklight();
+	lcd.noDisplay();
+  }
+
+  
+}
+
