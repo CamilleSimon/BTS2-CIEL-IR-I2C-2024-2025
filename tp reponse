@@ -1,0 +1,87 @@
+//#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// Création d'un objet LCD avec l'adresse I2C de l'écran
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+int buff = Serial.available();
+float nombre1;
+float nombre2;
+float resulat;
+char operation;
+String carre = "";
+char moula;
+
+void setup()
+{
+lcd.begin(16,2);
+lcd.init();
+lcd.backlight();
+}
+
+
+
+void Nombre()
+{
+  
+  char readChar;
+  while(buff > 0)
+    {
+        readChar = Serial.read(); 
+        delay(10);
+        carre += readChar;
+    	buff = Serial.available();
+  	}
+
+}
+
+void operation
+{
+  char readChar;
+  if(buff >0)
+  {
+    readChar = Serial.read();
+    moula = readChar
+  }
+}
+  
+
+void calcul()
+{
+
+  switch (operation)
+  {
+    case '+':
+    {
+      resulat = nombre1 + nombre2;
+      break;
+    }
+    case '-':
+    {
+      resulat = nombre1 - nombre2;
+      break;
+    }
+    case '*':
+    {
+      resulat = nombre1 * nombre2;
+      break;
+    }
+    case '/':
+    {
+      resulat = nombre1 / nombre2;
+      break;
+    }
+  }
+}
+
+
+void loop()
+{
+  lcd.setCursor(0,0);
+  lcd.print("1er nombre:");
+  lcd.setCursor(0,1);
+  if(Serial.available() > 0)
+  {
+    char nombre = Serial.read();
+    lcd.print(nombre);
+  }
+}
