@@ -1,0 +1,96 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+String nombre1 = "";
+String nombre2 = "";
+String operation = "";
+bool operationValidee = false;
+bool erreurDivision = false;
+
+void setup() {
+  Serial.begin(9600);
+  lcd.init();
+  lcd.backlight();
+}
+
+void loop() {
+
+  nombre1 = lireEntree("Premier nombre:");
+  
+  nombre2 = lireEntree("Deuxieme nombre:");
+  
+  operation = lireEntree("Operation (+,-,*,/):");
+
+  afficherResultat();
+  
+  if (!continuerProgramme()) {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Au revoir!");
+    delay(2000);
+    lcd.noBacklight();
+    lcd.noDisplay();
+    while (true); // Arrêt du programme
+  }
+}
+
+String lireEntree(String message) {
+  String entree = "";
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print(message);
+  
+  for (int i = 0; i < 100; i++) { // Timeout potentiel après 100 itérations
+    if (Serial.available() > 0) {
+      char caractere = Serial.read();
+      if (caractere != '\n') entree += caractere;
+      delay(100);
+      if (!entree.isEmpty()) break; // Sortir si une entrée est détectée
+    }
+    delay(50);
+  }
+  return entree;
+}
+
+void afficherResultat() {
+  float nb1 = nombre1.toFloat();
+  float nb2 = nombre2.toFloat();
+  float resultat = 0;
+
+  erreurDivision = false;
+
+  if (operation == "+") {
+    resultat = nb1 + nb2;
+  } else if (operation == "-") {
+    resultat = nb1 - nb2;
+  } else if (operation == "*") {
+    resultat = nb1 * nb2;
+  } else if (operation == "/") {
+    if (nb2 != 0) {
+      resultat = nb1 / nb2;
+    } else {
+      erreurDivision = true;
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Erreur:");
+      lcd.setCursor(0, 1);
+      lcd.print("Division par 0");
+      delay(2000);
+      return;
+    }
+  }
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Resultat:");
+  lcd.setCursor(0, 1);
+  lcd.print(resultat);
+  delay(3000);
+}
+
+bool continuerProgramme() {
+  String choix = lireEntree("Continuer? (y/n):");
+  return (choix == "y" || choix == "Y");
+}
