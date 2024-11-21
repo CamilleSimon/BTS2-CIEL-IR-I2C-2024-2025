@@ -1,0 +1,75 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// Création d'un objet LCD avec l'adresse I2C de l'écran
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+ 
+float operation;
+float resultat;
+float saisirVal;
+
+void setup() 
+{
+  Wire.begin();
+Serial.begin(9600);
+lcd.begin(16,2);
+lcd.init();
+lcd.backlight();
+}
+
+void saisirVal(String s)
+{
+ 
+  int buff = Serial.available(); // mise à jour du nombre de caratères restant
+  Serial.print(S);
+  if(buff > 0)
+    {
+        return Serial.read
+    }
+ }
+  
+  void calcul();
+{
+  if(operation == '+')
+    resultat = premierNombre + deuxiemeNombre;
+  if(operation == '-')
+    resultat = premierNombre - deuxiemeNombre;
+  if(operation == '*')
+    resultat = premierNombre * deuxiemeNombre;
+  if(operation == '/')
+    resultat = premierNombre / deuxiemeNombre;
+  
+  void loop()
+{  
+  saisirVal();
+  saisirOperation();
+  calcul();
+  lcd.print(resultat);
+{
+  	if(att == 0)
+    {  
+   		buff = Serial.available(); 
+      	if(buff > 0)
+			saisirVal();
+    }
+
+	if(att == 1)
+   	{
+     	buff = Serial.available();
+     	if(buff > 0)
+			saisirOperation();
+   	}
+
+  	if(att == 2)
+   	{
+     	buff = Serial.available();
+     	if(buff > 0)
+			saisirVal();
+   	}
+
+  	if(att == 3)
+   	{
+    	calcul();
+   	}
+}
+}
