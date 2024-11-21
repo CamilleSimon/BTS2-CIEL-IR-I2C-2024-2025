@@ -1,0 +1,106 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2); 
+
+float num1 = 0.0;
+float num2 = 0.0;
+char operation;
+float resultat = 0.0;
+bool nouvelleOperation = true;
+
+void setup() {
+  lcd.begin(16, 2);  
+  lcd.backlight();   
+  Serial.begin(9600);
+  lcd.init();
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Calculatrice");
+  delay(2000);  
+}
+
+void loop() {
+  if (nouvelleOperation) {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Entrez 1er nombre:");
+    while (Serial.available() == 0);  
+    num1 = Serial.parseFloat();
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("1er Nombre: ");
+    lcd.print(num1);
+    delay(1000);  
+
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Entrez 2nd nombre:");
+    while (Serial.available() == 0); 
+    num2 = Serial.parseFloat();
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("2nd Nombre: ");
+    lcd.print(num2);
+    delay(1000);  
+
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Entrez operation:");
+    lcd.setCursor(0, 1);
+    lcd.print("+ - * /");  
+    while (Serial.available() == 0);  
+    operation = Serial.read();  
+    delay(1000);
+
+    
+    switch (operation) {
+      case '+':
+        resultat = num1 + num2;
+        break;
+      case '-':
+        resultat = num1 - num2;
+        break;
+      case '*':
+        resultat = num1 * num2;
+        break;
+      case '/':
+        if (num2 != 0) {
+          resultat = num1 / num2;
+        } else {
+          lcd.clear();
+          lcd.setCursor(0, 0);
+          lcd.print("Erreur: Div 0");
+          delay(2000);
+          resultat = 0.0;
+        }
+        break;
+      default:
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Op invalide!");
+        delay(2000);
+        resultat = 0.0;
+        break;
+    }
+
+ 
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Resultat: ");
+    lcd.print(resultat, 4);  
+    delay(2000);  
+
+    
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Nouvelle op? O/N");
+    while (Serial.available() == 0);  
+    char reponse = Serial.read();  
+    if (reponse == 'O' || reponse == 'o') {
+      nouvelleOperation = true; 
+    } else {
+      nouvelleOperation = false; 
+    }
+  }
+}
