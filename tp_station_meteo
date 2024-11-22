@@ -1,0 +1,36 @@
+#include <Adafruit_LiquidCrystal.h>
+#include <wire.h>
+#include <adafruit_BME280>
+#include <adafruit_TSL2461>
+#include <LiquidCrystal_I2C>
+
+
+int seconds = 0;
+
+Adafruit_LiquidCrystal lcd_1(0);
+int moisissure =0;
+int temperature = 0;
+int humidité = 0; //[0-100]
+void setup()
+{
+  lcd_1.begin(16, 2);
+
+  lcd_1.print("hello world");
+}
+void getcapteur()
+{
+  buff = Serial.available
+  moisissure =Serial.read()
+  
+  buff = Serial.available
+
+void loop()
+{
+  lcd_1.setCursor(0, 1);
+  lcd_1.print(seconds);
+  lcd_1.setBacklight(1);
+  delay(500); // Wait for 500 millisecond(s)
+  lcd_1.setBacklight(0);
+  delay(500); // Wait for 500 millisecond(s)
+  seconds += 1;
+}
